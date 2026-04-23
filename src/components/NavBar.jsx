@@ -20,7 +20,10 @@ const NavBar = () => {
     dispatch(removeUser())
     return navigate("/login");    
 
-    } catch (error) {}
+    } catch (error) {
+      console.error("ERROR" + error.message);
+
+    }
   };
 
   return (

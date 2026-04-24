@@ -41,7 +41,7 @@ const dispatch = useDispatch();
                 onChange={(e) => setEmail(e.target.value)}
               />
             </fieldset>
-          </div>
+          </div>  
 
           <div>
             <fieldset className="fieldset my-4">

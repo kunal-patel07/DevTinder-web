@@ -3,7 +3,7 @@ import UserCard from "./UserCard";
 import axios from "axios";
 import { BASE_URL } from "../utils/constant";
 import { useDispatch } from "react-redux";
-import {addUser} from "../utils/userSlice"
+import { addUser } from "../utils/userSlice";
 
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user.firstName);
@@ -14,20 +14,23 @@ const EditProfile = ({ user }) => {
   const [about, setAbout] = useState(user.about);
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const saveProfile = async () => {
     try {
-      const res = await axios.post(
+      const res = await axios.patch(
         BASE_URL + "/profile/edit",
-        { firstName, lastName, age, gender, photoUrl, about , skills },
+        { firstName, lastName, age, gender, photoUrl, about },
         { withCredentials: true },
       );
-      dispatch(addUser(res?.data?.updatedProfile?.loggedInUser))
+      
+ 
     } catch (error) {
+     
+
       console.error("ERROR" + error.message);
     }
-   };
+  };
  
   return (
     <div className="flex justify-center my-10">

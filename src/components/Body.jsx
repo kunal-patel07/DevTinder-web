@@ -4,7 +4,7 @@ import {    Outlet, useNavigate } from "react-router-dom";
 import Footer from "./Footer";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { BASE_URL } from "../utils/Constant";
+import { BASE_URL } from "../utils/constant";
 import { addUser } from "../utils/userSlice";
 
 const Body = () => {

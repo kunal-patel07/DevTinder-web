@@ -1,6 +1,6 @@
 import axios from "axios";
-import React, { useEffect } from "react";
-import { BASE_URL } from "../utils/Constant";
+import React, {  useEffect } from "react";
+import { BASE_URL } from "../utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { addFeed } from "../utils/feedSlice";
 import UserCard from "./UserCard";
@@ -15,7 +15,7 @@ const Feed = () => {
         withCredentials: true,
       });
       dispatch(addFeed(res?.data));
-    } catch (error) {
+    } catch (error){
       console.error("invalid api");
     }
   };

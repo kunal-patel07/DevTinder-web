@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 import { useNavigate } from "react-router-dom";
-import { BASE_URL } from "../utils/Constant";
+import { BASE_URL } from "../utils/constant";
 
 const Login = () => {
   const [emailId, setEmail] = useState("kalp@gmail.com");

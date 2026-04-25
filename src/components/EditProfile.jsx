@@ -6,28 +6,39 @@ import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
 const EditProfile = ({ user }) => {
-  const [firstName, setFirstName] = useState(user.firstName);
-  const [lastName, setLastName] = useState(user.lastName);
-  const [age, setAge] = useState(user.age);
-  const [gender, setGender] = useState(user.gender);
+  const [firstName, setFirstName] = useState(user.firstName || "");
+  const [lastName, setLastName] = useState(user.lastName || "");
+  const [age, setAge] = useState(user.age || "");
+  const [gender, setGender] = useState(user.gender || "");
   const [error, setError] = useState("");
-  const [about, setAbout] = useState(user.about);
-  const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
+  const [about, setAbout] = useState(user.about || "");
+  const [photoUrl, setPhotoUrl] = useState(user.photoUrl || "");
+  const [showToast , setShowToast] = useState(false);
 
   const dispatch = useDispatch();
 
   const saveProfile = async () => {
+
+    setError(""); 
+    setShowToast(true)
     try {
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
         { firstName, lastName, age, gender, photoUrl, about },
         { withCredentials: true },
       );
-      
- 
+      dispatch(addUser(res.data.updatedProfile.loggedInUser));
+      setShowToast("Profile saved successfully!");
+     const i  = setTimeout(()=>{
+            setShowToast(false) 
+      },2000)
     } catch (error) {
-     
-
+      setShowToast(true)
+      setError(error?.response?.data || error.message);
+      const j = setTimeout(()=>{
+        setShowToast(false)
+        setError("")
+      },2000)
       console.error("ERROR" + error.message);
     }
   };
@@ -75,15 +86,12 @@ const EditProfile = ({ user }) => {
             </div>
 
             <div>
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Gender</legend>
-                <input
-                  type="text"
-                  className="input"
-                  value={gender}
-                  onChange={(e) => setGender(e.target.value)}
-                />
-              </fieldset>
+                 <legend className="fieldset-legend">Gender</legend>
+            <select defaultValue="Pick a gender" className="select" value={gender} onChange={(e) => setGender(e.target.value)}>
+             <option disabled={true}>Pick a gender</option>
+             <option>male</option>
+             <option>female</option>
+            </select>
             </div>
 
             <div>
@@ -109,12 +117,18 @@ const EditProfile = ({ user }) => {
                 />
               </fieldset>
             </div>
-            <p className="text-red-500">{error} </p>
-            <div className="card-actions justify-center ">
+             <div className="card-actions justify-center ">
               <button className="btn btn-primary"  onClick={saveProfile}>Save</button>
             </div>
           </div>
         </div>
+        {showToast &&(
+         <div className="toast toast-top toast-center">
+  <div className= {`alert ${error ? "alert-error" : "alert-success"}`}>
+    <span>{error || "Profile updated successfully" }</span>  
+  </div>
+</div>
+        )}
       </div>
       <UserCard user={{ firstName, lastName, photoUrl, about, age, gender }} />
     </div>

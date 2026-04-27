@@ -14,7 +14,34 @@ const EditProfile = ({ user }) => {
   const [error, setError] = useState("");
   const [about, setAbout] = useState(user.about || "");
   const [photoUrl, setPhotoUrl] = useState(user.photoUrl || "");
+  const [skills , setSkills] = useState(user.skills || []);
+  const [skillInput, setSkillInput] = useState("");
   const [showToast , setShowToast] = useState(false);
+  const MAX_SKILLS = 5;
+
+  const addSkill = (value) => {
+    const trimmed = value.trim();
+    if (!trimmed) return;
+    if (skills.length >= MAX_SKILLS) return;
+    if (skills.some((s) => s.toLowerCase() === trimmed.toLowerCase())) return;
+    setSkills([...skills, trimmed]);
+    setSkillInput("");
+  };
+
+  const removeSkill = (index) => {
+    setSkills(skills.filter((_, i) => i !== index));
+  };
+
+  const handleSkillKeyDown = (e) => {
+    if (e.key === "Enter" || e.key === ",") {
+      e.preventDefault();
+      addSkill(skillInput);
+    }
+    // Remove last chip on Backspace if input is empty
+    if (e.key === "Backspace" && skillInput === "" && skills.length > 0) {
+      removeSkill(skills.length - 1);
+    }
+  };
 
   const dispatch = useDispatch();
  const navigate = useNavigate();
@@ -23,9 +50,15 @@ const EditProfile = ({ user }) => {
     setError(""); 
     setShowToast(true)
     try {
+      // Build payload, only include gender if user has selected one
+      const payload = { firstName, lastName, age, photoUrl, about, skills };
+      if (gender && gender !== "") {
+        payload.gender = gender;
+      }
+
       const res = await axios.patch(
         BASE_URL + "/profile/edit",
-        { firstName, lastName, age, gender, photoUrl, about },
+        payload,
         { withCredentials: true },
       );
       dispatch(addUser(res.data.updatedProfile.loggedInUser));
@@ -88,6 +121,35 @@ const EditProfile = ({ user }) => {
               </fieldset>
             </div>
 
+
+  <fieldset className="fieldset">
+                <legend className="fieldset-legend">Skills (max {MAX_SKILLS})</legend>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {skills.map((skill, index) => (
+                    <div key={index} className="badge badge-primary gap-1 py-3 px-3">
+                      {skill}
+                      <button
+                        type="button"
+                        className="btn btn-ghost btn-xs px-0 text-primary-content hover:text-error"
+                        onClick={() => removeSkill(index)}
+                      >✕</button>
+                    </div>
+                  ))}
+                </div>
+                {skills.length >= MAX_SKILLS ? (
+                  <p className="text-xs text-warning">Maximum {MAX_SKILLS} skills allowed</p>
+                ) : (
+                  <input
+                    type="text"
+                    className="input"
+                    placeholder="Type a skill & press Enter"
+                    value={skillInput}
+                    onChange={(e) => setSkillInput(e.target.value)}
+                    onKeyDown={handleSkillKeyDown}
+                  />
+                )}
+              </fieldset>
+
             <div>
                  <legend className="fieldset-legend">Gender</legend>
             <select defaultValue="Pick a gender" className="select" value={gender} onChange={(e) => setGender(e.target.value)}>
@@ -133,7 +195,7 @@ const EditProfile = ({ user }) => {
 </div>
         )}
       </div>
-      <UserCard user={{ firstName, lastName, photoUrl, about, age, gender }} />
+      <UserCard user={{ firstName, lastName, photoUrl, about, age, gender, skills }} hideActions={true} />
     </div>
   );
 };

@@ -39,7 +39,7 @@ const Connections = () => {
       
       <div className="flex flex-col items-center gap-6">
         {connections.map((connection) => {
-          const {  firstName, lastName, photoUrl,  skills } = connection;
+          const {  firstName, lastName, photoUrl,  skills ,about} = connection;
 
           return (
             <div key={firstName} className="card card-side bg-base-300 shadow-xl w-full max-w-2xl text-left">
@@ -54,7 +54,7 @@ const Connections = () => {
                 <h2 className="card-title text-2xl">
                   {firstName} {lastName}
                 </h2>
-                
+                <p>{about}</p>
                 {skills && skills.length > 0 && (
                   <div className="mt-2">
                     <p className="text-xs font-semibold mb-1 text-gray-300">Skills:</p>

@@ -52,7 +52,7 @@ try {
 
       <div className="flex flex-col items-center gap-6">
         {requests.map((request) => {
-          const {_id, firstName, lastName,photoUrl,skills } = request.fromUserId;
+          const {_id, firstName, lastName,photoUrl,skills, age} = request.fromUserId;
 
           return (
             <div key={request._id} className="card card-side bg-base-300 shadow-xl w-full max-w-2xl text-left">
@@ -67,7 +67,8 @@ try {
                 <h2 className="card-title text-2xl">
                   {firstName} {lastName}
                  </h2>
-                 
+                 <p>{request.fromUserId.about}</p>
+                 <p className="font-bold">Age : {request.fromUserId.age} </p>
                 {skills && skills.length > 0 && (
                   <div className="mt-2">
                     <p className="text-xs font-semibold mb-1 text-gray-300">Skills:</p>

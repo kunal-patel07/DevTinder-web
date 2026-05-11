@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # install nginx in aws
   sudo apt update    - to update system
   sudo apt install nginx  - to install nginx
